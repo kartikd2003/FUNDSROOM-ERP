@@ -22,11 +22,12 @@ class CustomerRepository {
     const where: any = { isDeleted: false };
 
     if (query.search) {
+      // MySQL handles case-insensitive search by default with proper collation
       where.OR = [
-        { customerName: { contains: query.search, mode: 'insensitive' } },
-        { businessName: { contains: query.search, mode: 'insensitive' } },
-        { mobile: { contains: query.search, mode: 'insensitive' } },
-        { email: { contains: query.search, mode: 'insensitive' } }
+        { customerName: { contains: query.search } },
+        { businessName: { contains: query.search } },
+        { mobile: { contains: query.search } },
+        { email: { contains: query.search } }
       ];
     }
 

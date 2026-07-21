@@ -4,12 +4,12 @@ export interface CreateStockMovementDTO {
   quantity: number;
   type: 'IN' | 'OUT';
   reason?: string;
-  userId?: number;
+  userId?: string;
 }
 
 export interface StockUpdateDTO {
   quantity: number;
   warehouseId: number;
   reason?: string;
-  userId?: number;
+  userId?: string;
 }

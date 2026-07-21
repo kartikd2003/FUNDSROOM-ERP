@@ -1,5 +1,5 @@
 import bcrypt from 'bcrypt';
-import { PrismaClient, Role, StockMovementType, AuditAction } from '@prisma/client';
+import { PrismaClient, Role, CustomerType, CustomerStatus, StockMovementType, AuditAction } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
@@ -32,10 +32,55 @@ async function main() {
   }
 
   const adminId = createdUsers[Role.ADMIN].id;
+  const salesUserId = createdUsers[Role.SALES].id;
   const warehouseUserId = createdUsers[Role.WAREHOUSE].id;
 
   // ──────────────────────────────────────────────
-  // 2. CATEGORIES
+  // 2. CUSTOMERS (Fake customers)
+  // ──────────────────────────────────────────────
+  const customerData = [
+    { customerName: 'Rajesh Patel', mobile: '9876543210', email: 'rajesh.patel@example.com', businessName: 'Patel Electronics', gstNumber: '27AABCU1234D1Z5', customerType: 'WHOLESALE' as CustomerType, status: 'ACTIVE' as CustomerStatus, address: '42, Lamington Road, Mumbai - 400004', notes: 'Bulk buyer of electronic components, monthly orders' },
+    { customerName: 'Priya Sharma', mobile: '9876543211', email: 'priya.sharma@example.com', businessName: 'Sharma Office Solutions', gstNumber: '07DEFG5678H1Z2', customerType: 'RETAIL' as CustomerType, status: 'ACTIVE' as CustomerStatus, address: '15, Nehru Place, New Delhi - 110019', notes: 'Regular customer for office supplies and furniture' },
+    { customerName: 'Amit Singh', mobile: '9876543212', email: 'amit.singh@example.com', businessName: 'Singh Distributors', gstNumber: '29IJKL9012M3N4', customerType: 'DISTRIBUTOR' as CustomerType, status: 'ACTIVE' as CustomerStatus, address: '88, Industrial Area, Ahmedabad - 380002', notes: 'Key distributor for Western region, 15+ years association' },
+    { customerName: 'Sunita Deshmukh', mobile: '9876543213', email: 'sunita.d@example.com', businessName: 'Deshmukh Trading Co.', gstNumber: '27MNOP3456Q7R8', customerType: 'WHOLESALE' as CustomerType, status: 'ACTIVE' as CustomerStatus, address: '203, Market Yard, Pune - 411037', notes: 'Wholesale buyer of packaging materials and safety equipment' },
+    { customerName: 'Vikram Joshi', mobile: '9876543214', email: 'vikram.joshi@example.com', businessName: 'Joshi Furnishings', gstNumber: '08STUV7890W1X2', customerType: 'RETAIL' as CustomerType, status: 'LEAD' as CustomerStatus, address: '5, MG Road, Jaipur - 302001', notes: 'New lead - interested in bulk furniture purchase for hotel project' },
+    { customerName: 'Ananya Gupta', mobile: '9876543215', email: 'ananya.g@example.com', businessName: 'Gupta Stationers', gstNumber: null, customerType: 'RETAIL' as CustomerType, status: 'ACTIVE' as CustomerStatus, address: '12, College Street, Kolkata - 700073', notes: 'Small business, regular orders for office supplies' },
+    { customerName: 'Mohammed Khan', mobile: '9876543216', email: 'mkhan@example.com', businessName: 'Khan Industrial Supplies', gstNumber: '23YZAB1234C5D6', customerType: 'DISTRIBUTOR' as CustomerType, status: 'ACTIVE' as CustomerStatus, address: '56, Industrial Zone, Bhiwandi - 421302', notes: 'Major distributor for raw materials in Maharashtra' },
+    { customerName: 'Deepa Nair', mobile: '9876543217', email: 'deepa.nair@example.com', businessName: 'Nair Enterprises', gstNumber: '32EFGH7890I1J2', customerType: 'WHOLESALE' as CustomerType, status: 'INACTIVE' as CustomerStatus, address: '7, SIPCOT Industrial Complex, Chennai - 600032', notes: 'Inactive since 2024 - payment issues, follow up needed' },
+    { customerName: 'Rohit Mehta', mobile: '9876543218', email: 'rohit.mehta@example.com', businessName: 'Mehta Packaging', gstNumber: '09KLMN3456O7P8', customerType: 'WHOLESALE' as CustomerType, status: 'ACTIVE' as CustomerStatus, address: '34, Industrial Estate, Ludhiana - 141003', notes: 'Regular buyer of packaging materials, monthly order value ~50K' },
+    { customerName: 'Kavita Reddy', mobile: '9876543219', email: 'kavita.r@example.com', businessName: 'Reddy Safety Solutions', gstNumber: '29QRST7890U1V2', customerType: 'RETAIL' as CustomerType, status: 'LEAD' as CustomerStatus, address: '22, BTM Layout, Bengaluru - 560076', notes: 'Prospective buyer for safety equipment - factory setup' },
+    { customerName: 'Suresh Verma', mobile: '9876543220', email: 'suresh.v@example.com', businessName: 'Verma Traders', gstNumber: null, customerType: 'RETAIL' as CustomerType, status: 'ACTIVE' as CustomerStatus, address: '9, Sadar Bazar, Nagpur - 440001', notes: 'Small trader, cash-on-delivery basis' },
+    { customerName: 'Neha Agarwal', mobile: '9876543221', email: 'neha.a@example.com', businessName: 'Agarwal Office Interiors', gstNumber: '23WXYZ1234E5F6', customerType: 'WHOLESALE' as CustomerType, status: 'ACTIVE' as CustomerStatus, address: '45, Civil Lines, Kanpur - 208001', notes: 'Bulk orders for office furniture and supplies, quarterly purchase' },
+    { customerName: 'Arjun Tiwari', mobile: '9876543222', email: 'arjun.t@example.com', businessName: 'Tiwari Raw Materials', gstNumber: '19GHIJ5678K9L0', customerType: 'DISTRIBUTOR' as CustomerType, status: 'ACTIVE' as CustomerStatus, address: '67, MIDC Area, Thane - 400604', notes: 'Key distributor for raw materials, supplies to 20+ manufacturers' },
+    { customerName: 'Pooja Malhotra', mobile: '9876543223', email: 'pooja.m@example.com', businessName: 'Malhotra Electronics', gstNumber: '07MNOP9012Q3R4', customerType: 'RETAIL' as CustomerType, status: 'INACTIVE' as CustomerStatus, address: '18, Chandni Chowk, Delhi - 110006', notes: 'Inactive - shifted to online-only business model' },
+    { customerName: 'Ganesh Iyer', mobile: '9876543224', email: 'ganesh.i@example.com', businessName: 'Iyer Industrial Corp', gstNumber: '33STUV3456W7X8', customerType: 'WHOLESALE' as CustomerType, status: 'ACTIVE' as CustomerStatus, address: '91, Ambattur Industrial Estate, Chennai - 600058', notes: 'Premium client, high-value orders for industrial supplies' },
+  ];
+
+  for (const c of customerData) {
+    const existing = await prisma.customer.findUnique({ where: { mobile: c.mobile } });
+    if (!existing) {
+      await prisma.customer.create({
+        data: {
+          customerName: c.customerName,
+          mobile: c.mobile,
+          email: c.email,
+          businessName: c.businessName,
+          gstNumber: c.gstNumber,
+          customerType: c.customerType,
+          status: c.status,
+          address: c.address,
+          notes: c.notes,
+          createdById: salesUserId,
+        },
+      });
+      console.log(`  ✅ Created customer: ${c.customerName} (${c.businessName})`);
+    } else {
+      console.log(`  ⏭️  Customer already exists: ${c.mobile}`);
+    }
+  }
+
+  // ──────────────────────────────────────────────
+  // 3. CATEGORIES
   // ──────────────────────────────────────────────
   const categoryData = [
     { name: 'Electronics', description: 'Electronic devices and components including circuits, sensors, and power supplies' },
@@ -266,6 +311,7 @@ async function main() {
   // SUMMARY
   // ──────────────────────────────────────────────
   const totalUsers = await prisma.user.count();
+  const totalCustomers = await prisma.customer.count();
   const totalCategories = await prisma.category.count();
   const totalWarehouses = await prisma.warehouse.count();
   const totalProducts = await prisma.product.count();
@@ -275,6 +321,7 @@ async function main() {
 
   console.log('\n📊 Seeding Summary:');
   console.log(`  👤 Users: ${totalUsers}`);
+  console.log(`  👥 Customers: ${totalCustomers}`);
   console.log(`  📂 Categories: ${totalCategories}`);
   console.log(`  🏭 Warehouses: ${totalWarehouses}`);
   console.log(`  📦 Products: ${totalProducts}`);

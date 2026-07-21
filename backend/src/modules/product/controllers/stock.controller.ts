@@ -31,7 +31,8 @@ class StockController {
 
   async stockIn(req: Request, res: Response) {
     try {
-      const product = await StockService.increaseStock(Number(req.params.id), req.body);
+      const data = { ...req.body, userId: (req as any).user?.id };
+      const product = await StockService.increaseStock(Number(req.params.id), data);
       return res.status(200).json({ success: true, message: 'Stock increased successfully', data: product });
     } catch (error: any) {
       return res.status(error.status || 400).json({ success: false, message: error.message });
@@ -40,7 +41,8 @@ class StockController {
 
   async stockOut(req: Request, res: Response) {
     try {
-      const product = await StockService.decreaseStock(Number(req.params.id), req.body);
+      const data = { ...req.body, userId: (req as any).user?.id };
+      const product = await StockService.decreaseStock(Number(req.params.id), data);
       return res.status(200).json({ success: true, message: 'Stock decreased successfully', data: product });
     } catch (error: any) {
       return res.status(error.status || 400).json({ success: false, message: error.message });
