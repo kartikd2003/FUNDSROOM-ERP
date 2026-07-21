@@ -23,15 +23,35 @@ export function AuthProvider({ children }) {
   }, []);
 
   const login = async (email, password) => {
-    const res = await api.post('/api/auth/login', { email, password });
+  console.log("API URL:", import.meta.env.VITE_API_URL);
+
+  try {
+    console.log("Sending login request...");
+
+    const res = await api.post("/api/auth/login", {
+      email,
+      password,
+    });
+
+    console.log("Response:", res);
+
     const { token, user } = res.data.data;
-    localStorage.setItem('token', token);
-    localStorage.setItem('user', JSON.stringify(user));
-    api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+
+    localStorage.setItem("token", token);
+    localStorage.setItem("user", JSON.stringify(user));
+
+    api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
     setUser(user);
+
     return user;
-  };
+  } catch (err) {
+    console.error("LOGIN ERROR:", err);
+    console.error("Response:", err.response);
+    console.error("Data:", err.response?.data);
+    console.error("Status:", err.response?.status);
+    throw err;
+  }
+};
 
   const logout = () => {
     localStorage.removeItem('token');
