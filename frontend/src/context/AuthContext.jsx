@@ -11,65 +11,59 @@ export function AuthProvider({ children }) {
   useEffect(() => {
     const token = localStorage.getItem('token');
     const userData = localStorage.getItem('user');
+
     if (token && userData) {
       try {
         setUser(JSON.parse(userData));
+        api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+        axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
       } catch {
         localStorage.removeItem('token');
         localStorage.removeItem('user');
       }
     }
+
     setLoading(false);
   }, []);
 
   const login = async (email, password) => {
-  console.log("API URL:", import.meta.env.VITE_API_URL);
-
-  try {
-    console.log("Sending login request...");
-
-    const res = await api.post("/api/auth/login", {
+    const res = await api.post('/api/auth/login', {
       email,
       password,
     });
 
-    console.log("Response:", res);
-
     const { token, user } = res.data.data;
 
-    localStorage.setItem("token", token);
-    localStorage.setItem("user", JSON.stringify(user));
+    localStorage.setItem('token', token);
+    localStorage.setItem('user', JSON.stringify(user));
 
-    api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+    api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+
     setUser(user);
 
     return user;
-  } catch (err) {
-    console.error("LOGIN ERROR:", err);
-    console.error("Response:", err.response);
-    console.error("Data:", err.response?.data);
-    console.error("Status:", err.response?.status);
-    throw err;
-  }
-};
+  };
 
   const logout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
+
     delete api.defaults.headers.common['Authorization'];
     delete axios.defaults.headers.common['Authorization'];
+
     setUser(null);
   };
 
-  // Restore auth header from storage on mount
-  const token = localStorage.getItem('token');
-  if (token) {
-    api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-  }
-
   return (
-    <AuthContext.Provider value={{ user, login, logout, loading }}>
+    <AuthContext.Provider
+      value={{
+        user,
+        login,
+        logout,
+        loading,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );
@@ -78,4 +72,3 @@ export function AuthProvider({ children }) {
 export function useAuth() {
   return useContext(AuthContext);
 }
-
