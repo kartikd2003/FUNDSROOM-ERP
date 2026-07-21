@@ -3,6 +3,10 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import Sidebar from './components/Sidebar';
 import LoginPage from './pages/LoginPage';
 import InventoryDashboard from './pages/InventoryDashboard';
+import Customers from './pages/Customers';
+import AddCustomer from './pages/AddCustomer';
+import EditCustomer from './pages/EditCustomer';
+import CustomerDetail from './pages/CustomerDetail';
 import Products from './pages/Products';
 import AddProduct from './pages/AddProduct';
 import EditProduct from './pages/EditProduct';
@@ -26,6 +30,10 @@ function AppLayout() {
       <div className="main-content">
         <Routes>
           <Route path="/" element={<InventoryDashboard />} />
+          <Route path="/customers" element={<Customers />} />
+          <Route path="/customers/add" element={<AddCustomer />} />
+          <Route path="/customers/edit/:id" element={<EditCustomer />} />
+          <Route path="/customers/:id" element={<CustomerDetail />} />
           <Route path="/products" element={<Products />} />
           <Route path="/products/add" element={<AddProduct />} />
           <Route path="/products/edit/:id" element={<EditProduct />} />

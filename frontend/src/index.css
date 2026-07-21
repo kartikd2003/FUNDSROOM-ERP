@@ -477,7 +477,7 @@ tr:hover {
   border-radius: 12px;
   padding: 40px;
   width: 100%;
-  max-width: 400px;
+  max-width: 440px;
   box-shadow: 0 10px 40px rgba(0,0,0,0.2);
 }
 
@@ -498,6 +498,95 @@ tr:hover {
   text-align: center;
   margin-bottom: 16px;
   font-size: 14px;
+}
+
+/* Demo Credentials Section */
+.demo-section {
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.demo-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #1a1a2e;
+  margin-bottom: 4px;
+}
+
+.demo-icon {
+  font-size: 16px;
+}
+
+.demo-subtitle {
+  font-size: 12px !important;
+  color: #9ca3af !important;
+  margin-bottom: 12px !important;
+  text-align: left !important;
+}
+
+.demo-table {
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.demo-table-header {
+  display: grid;
+  grid-template-columns: 1fr 1.5fr 1fr;
+  gap: 8px;
+  padding: 8px 12px;
+  background: #f9fafb;
+  font-size: 11px;
+  font-weight: 600;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.demo-row {
+  display: grid;
+  grid-template-columns: 1fr 1.5fr 1fr;
+  gap: 8px;
+  padding: 10px 12px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.15s;
+  border-top: 1px solid #f3f4f6;
+  align-items: center;
+}
+
+.demo-row:hover {
+  background: #eef2ff;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.demo-row:active {
+  transform: translateY(0);
+}
+
+.demo-role {
+  font-weight: 500;
+  color: #1a1a2e;
+  white-space: nowrap;
+}
+
+.demo-email {
+  color: #3b82f6;
+  font-family: monospace;
+  font-size: 12px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.demo-pass {
+  color: #6b7280;
+  font-family: monospace;
+  font-size: 12px;
 }
 
 /* Alert */

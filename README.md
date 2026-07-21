@@ -4,6 +4,17 @@ Full-stack inventory management system built with **Node.js**, **Express**, **Re
 
 ---
 
+## 🌐 Live Demo
+
+| Service        | URL                                        |
+|----------------|--------------------------------------------|
+| **Frontend**   | [https://fundsroom-erp.vercel.app](https://fundsroom-erp.vercel.app) |
+| **Backend API**| [https://fundsroom-backend.onrender.com](https://fundsroom-backend.onrender.com) |
+
+> Click any account in the **Demo Credentials** section on the login page to auto-fill and sign in instantly.
+
+---
+
 ## 🚀 Tech Stack
 
 | Layer       | Technology                        |
@@ -22,54 +33,86 @@ Full-stack inventory management system built with **Node.js**, **Express**, **Re
 
 ```
 Fundsroom/
-├── backend/                          # Express API Server
+├── backend/                              # Express API Server
 │   ├── prisma/
-│   │   └── schema.prisma             # Database models
+│   │   ├── schema.prisma                 # Database models
+│   │   └── migrations/                   # Prisma migrations
+│   ├── uploads/                          # Uploaded images
 │   ├── src/
-│   │   ├── app.ts                    # Express app setup
-│   │   ├── server.ts                 # Entry point + admin seed
+│   │   ├── app.ts                        # Express app setup (CORS, routes, static)
+│   │   ├── server.ts                     # Entry point + auto-seed admin
 │   │   ├── config/
-│   │   │   ├── db.ts                 # Prisma client
-│   │   │   └── env.ts                # Environment config
+│   │   │   ├── db.ts                     # Prisma client singleton
+│   │   │   └── env.ts                    # Environment variables
+│   │   ├── controllers/
+│   │   │   ├── auth.controller.ts        # Register, login, profile, change password
+│   │   │   └── customer.controller.ts
 │   │   ├── middleware/
-│   │   │   ├── auth.middleware.ts     # JWT auth
-│   │   │   ├── role.middleware.ts     # Role-based access
-│   │   │   ├── error.middleware.ts    # Error handler
-│   │   │   └── notFound.middleware.ts # 404 handler
-│   │   ├── modules/product/
-│   │   │   ├── controllers/          # Route handlers
-│   │   │   ├── services/             # Business logic
-│   │   │   ├── repositories/         # Prisma queries
-│   │   │   ├── validators/           # Zod schemas
-│   │   │   ├── interfaces/           # TypeScript types
-│   │   │   ├── routes/               # Express routes
-│   │   │   ├── middleware/           # Multer upload config
-│   │   │   └── utils/                # CSV helper
-│   │   └── routes/index.ts           # Route aggregator
-│   └── uploads/products/             # Uploaded images
+│   │   │   ├── auth.middleware.ts         # JWT authentication guard
+│   │   │   ├── role.middleware.ts         # Role-based access control
+│   │   │   ├── error.middleware.ts        # Global error handler
+│   │   │   └── notFound.middleware.ts     # 404 handler
+│   │   ├── modules/
+│   │   │   ├── auth/
+│   │   │   │   ├── middleware/
+│   │   │   │   └── routes/
+│   │   │   ├── customer/
+│   │   │   │   └── customer.routes.ts
+│   │   │   ├── dashboard/                # Main dashboard controllers
+│   │   │   ├── notification/             # Notification templates & services
+│   │   │   ├── product/                  # Core inventory module
+│   │   │   │   ├── controllers/          # Route handlers (product, category, warehouse, stock, analytics, audit, dashboard, import, export, image)
+│   │   │   │   ├── services/             # Business logic layer
+│   │   │   │   ├── repositories/         # Prisma query layer
+│   │   │   │   ├── validators/           # Zod validation schemas
+│   │   │   │   ├── interfaces/           # TypeScript interfaces
+│   │   │   │   ├── routes/               # Express route definitions
+│   │   │   │   ├── middleware/           # File upload config (Multer)
+│   │   │   │   └── utils/                # CSV helper utilities
+│   │   │   └── sales/                    # Sales module (invoices, returns)
+│   │   ├── routes/
+│   │   │   ├── index.ts                  # Route aggregator
+│   │   │   ├── auth.routes.ts
+│   │   │   └── customer.routes.ts
+│   │   ├── seed/seed.ts                  # Database seed script (users, customers, products, stock movements, alerts, audit logs)
+│   │   ├── services/                     # Auth & customer services
+│   │   ├── repositories/                 # Customer repository
+│   │   ├── validators/                   # Customer validators
+│   │   ├── interfaces/                   # Customer & followup types
+│   │   ├── utils/                        # AppError, hash, JWT utilities
+│   │   └── types/                        # Shared type declarations
+│   └── package.json
 │
-├── frontend/                         # React SPA
+├── frontend/                             # React SPA (Vite)
 │   ├── index.html
-│   ├── vite.config.js                # Proxy to backend
+│   ├── vite.config.js                    # Dev proxy → localhost:5000
 │   └── src/
-│       ├── App.jsx                   # Router + layout
-│       ├── index.css                 # Global styles
-│       ├── main.jsx                  # Entry point
+│       ├── App.jsx                       # Router + layout (sidebar)
+│       ├── main.jsx                      # React entry point
+│       ├── index.css                     # Global styles (sidebar, cards, tables, forms, login, etc.)
 │       ├── context/
-│       │   └── AuthContext.jsx       # Auth state
+│       │   └── AuthContext.jsx           # Auth state (login/logout/token management)
 │       ├── components/
-│       │   └── Sidebar.jsx           # Navigation
-│       └── pages/
-│           ├── LoginPage.jsx
-│           ├── InventoryDashboard.jsx
-│           ├── Products.jsx
-│           ├── AddProduct.jsx
-│           ├── EditProduct.jsx
-│           ├── Categories.jsx
-│           ├── Warehouses.jsx
-│           ├── StockManagement.jsx
-│           ├── Analytics.jsx
-│           └── AuditLogs.jsx
+│       │   └── Sidebar.jsx               # Navigation sidebar
+│       ├── pages/
+│       │   ├── LoginPage.jsx              # Login form + Demo Credentials table
+│       │   ├── InventoryDashboard.jsx     # Summary cards, charts, activity feed, low stock alerts
+│       │   ├── Products.jsx              # Product CRUD table (search, filter, sort, pagination, stock modals, image upload)
+│       │   ├── AddProduct.jsx            # Create product form
+│       │   ├── EditProduct.jsx           # Edit product form
+│       │   ├── Categories.jsx            # Category list with add/edit/delete modals
+│       │   ├── Warehouses.jsx            # Warehouse list with add/edit/delete modals
+│       │   ├── StockManagement.jsx        # Stock movements table + product history view
+│       │   ├── Analytics.jsx             # Monthly movement line chart, top products bar chart
+│       │   ├── AuditLogs.jsx             # Filterable audit log table
+│       │   ├── Customers.jsx             # Customer list
+│       │   ├── AddCustomer.jsx           # Create customer form
+│       │   ├── EditCustomer.jsx          # Edit customer form
+│       │   └── CustomerDetail.jsx        # Customer detail view
+│       ├── services/
+│       │   └── api.js                    # Axios instance (base URL from env)
+│       ├── auth/                         # Auth sub-modules
+│       └── modules/                      # Feature modules (notification, sales)
 └── README.md
 ```
 
@@ -117,7 +160,14 @@ npm run dev
 
 The server will:
 - Auto-run migrations
-- Seed an admin user: `admin@erp.com` / `Admin@123`
+- Seed all demo users (skips any that already exist)
+
+| Role | Email | Password |
+|------|-------|----------|
+| 👑 Admin | `admin@erp.com` | `Admin@123` |
+| 💰 Sales | `sales@erp.com` | `Password@123` |
+| 📦 Warehouse | `warehouse@erp.com` | `Password@123` |
+| 📊 Accounts | `accounts@erp.com` | `Password@123` |
 
 Server starts on **http://localhost:5000**.
 
@@ -133,14 +183,18 @@ npm run dev
 
 Frontend starts on **http://localhost:5173** — API calls are proxied to the backend automatically.
 
-### Login
+---
 
-Use the seeded admin credentials:
+## 🔑 Demo Credentials
 
-| Field    | Value            |
-|----------|------------------|
-| Email    | `admin@erp.com` |
-| Password | `Admin@123`     |
+Click any row on the login page to auto-fill and sign in.
+
+| Role         | Email                   | Password         |
+|--------------|-------------------------|------------------|
+| 👑 **Admin**   | `admin@erp.com`        | **`Admin@123`** |
+| 💰 **Sales**   | `sales@erp.com`        | `Password@123`  |
+| 📦 **Warehouse** | `warehouse@erp.com`  | `Password@123`  |
+| 📊 **Accounts** | `accounts@erp.com`    | `Password@123`  |
 
 ---
 

@@ -19,6 +19,10 @@ export default function Sidebar() {
           <span className="icon">📊</span>
           <span>Dashboard</span>
         </NavLink>
+        <NavLink to="/customers" className={({ isActive }) => isActive ? 'active' : ''}>
+          <span className="icon">👥</span>
+          <span>Customers</span>
+        </NavLink>
         <NavLink to="/products" className={({ isActive }) => isActive ? 'active' : ''}>
           <span className="icon">📦</span>
           <span>Products</span>
