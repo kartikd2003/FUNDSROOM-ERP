@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../services/api';
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { useAuth } from '../context/AuthContext';
 import { PERMISSIONS } from '../utils/permissions';
@@ -15,9 +15,9 @@ export default function Analytics() {
     const fetch = async () => {
       try {
         const [moveRes, topRes, catRes] = await Promise.all([
-          axios.get('/api/analytics/monthly-movement?months=6'),
-          axios.get('/api/analytics/top-products?top=10'),
-          axios.get('/api/analytics/category-stock')
+          api.get('/api/analytics/monthly-movement?months=6'),
+          api.get('/api/analytics/top-products?top=10'),
+          api.get('/api/analytics/category-stock')
         ]);
         setMonthlyMovement(moveRes.data.data || []);
         setTopProducts(topRes.data.data || []);
@@ -117,4 +117,5 @@ export default function Analytics() {
     </div>
   );
 }
+
 

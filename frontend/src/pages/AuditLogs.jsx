@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import { PERMISSIONS } from '../utils/permissions';
 
@@ -14,7 +14,7 @@ export default function AuditLogs() {
     try {
       const params = {};
       if (actionFilter) params.action = actionFilter;
-      const res = await axios.get('/api/audit', { params });
+      const res = await api.get('/api/audit', { params });
       setLogs(res.data.data || []);
     } catch (err) { console.error(err); }
     finally { setLoading(false); }
@@ -92,4 +92,5 @@ export default function AuditLogs() {
     </div>
   );
 }
+
 

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import { PERMISSIONS } from '../utils/permissions';
 
@@ -17,8 +17,8 @@ export default function StockManagement() {
     const fetch = async () => {
       try {
         const [moveRes, prodRes] = await Promise.all([
-          axios.get('/api/stock'),
-          axios.get('/api/products', { params: { limit: 200 } })
+          api.get('/api/stock'),
+          api.get('/api/products', { params: { limit: 200 } })
         ]);
         setMovements(moveRes.data.data || []);
         setProducts(prodRes.data.data || []);
@@ -31,7 +31,7 @@ export default function StockManagement() {
   const fetchHistory = async () => {
     if (!productId) return;
     try {
-      const res = await axios.get(`/api/stock/${productId}/history`);
+      const res = await api.get(`/api/stock/${productId}/history`);
       setProductHistory(res.data.data || []);
       setView('history');
     } catch (err) { console.error(err); }
@@ -129,4 +129,5 @@ export default function StockManagement() {
     </div>
   );
 }
+
 

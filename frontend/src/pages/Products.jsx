@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
+import api from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import { PERMISSIONS } from '../utils/permissions';
 
@@ -35,7 +35,7 @@ export default function Products() {
       if (categoryId) params.categoryId = categoryId;
       if (warehouseId) params.warehouseId = warehouseId;
       if (stockStatus) params.stockStatus = stockStatus;
-      const res = await axios.get('/api/products', { params });
+      const res = await api.get('/api/products', { params });
       const d = res.data;
       setProducts(d.data || []);
       setTotalRecords(d.totalRecords || 0);
@@ -51,8 +51,8 @@ export default function Products() {
     const fetchMeta = async () => {
       try {
         const [catRes, whRes] = await Promise.all([
-          axios.get('/api/categories'),
-          axios.get('/api/warehouses')
+          api.get('/api/categories'),
+          api.get('/api/warehouses')
         ]);
         setCategories(catRes.data.data || []);
         setWarehouses(whRes.data.data || []);
@@ -72,7 +72,7 @@ export default function Products() {
 
   const handleStockIn = async (id) => {
     try {
-      await axios.post(`/api/products/${id}/stock/in`, {
+      await api.post(`/api/products/${id}/stock/in`, {
         quantity: parseInt(stockQty), warehouseId: 1, reason: stockReason, userId: 1
       });
       setMessage('Stock added successfully');
@@ -83,7 +83,7 @@ export default function Products() {
 
   const handleStockOut = async (id) => {
     try {
-      await axios.post(`/api/products/${id}/stock/out`, {
+      await api.post(`/api/products/${id}/stock/out`, {
         quantity: parseInt(stockQty), warehouseId: 1, reason: stockReason, userId: 1
       });
       setMessage('Stock removed successfully');
@@ -95,7 +95,7 @@ export default function Products() {
   const handleDelete = async (id) => {
     if (!confirm('Are you sure you want to delete this product?')) return;
     try {
-      await axios.delete(`/api/products/${id}`);
+      await api.delete(`/api/products/${id}`);
       setMessage('Product deleted');
       fetchProducts();
     } catch (err) { setMessage(err.response?.data?.message || 'Error'); }
@@ -106,7 +106,7 @@ export default function Products() {
     const formData = new FormData();
     formData.append('image', selectedFile);
     try {
-      await axios.post(`/api/products/${id}/image`, formData);
+      await api.post(`/api/products/${id}/image`, formData);
       setMessage('Image uploaded successfully');
       setImageModal(null); setSelectedFile(null);
       fetchProducts();
@@ -115,7 +115,7 @@ export default function Products() {
 
   const handleExport = async () => {
     try {
-      const res = await axios.get('/api/products/export', { responseType: 'blob' });
+      const res = await api.get('/api/products/export', { responseType: 'blob' });
       const url = window.URL.createObjectURL(new Blob([res.data]));
       const link = document.createElement('a');
       link.href = url;
@@ -132,7 +132,7 @@ export default function Products() {
     const formData = new FormData();
     formData.append('file', file);
     try {
-      const res = await axios.post('/api/products/import', formData);
+      const res = await api.post('/api/products/import', formData);
       setMessage(`Import: ${res.data.data.imported} imported, ${res.data.data.failed} failed`);
     } catch (err) { setMessage(err.response?.data?.message || 'Import failed'); }
     e.target.value = '';
@@ -323,3 +323,4 @@ export default function Products() {
     </div>
   );
 }
+

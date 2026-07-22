@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import { PERMISSIONS } from '../utils/permissions';
 
@@ -14,7 +14,7 @@ export default function Warehouses() {
 
   const fetchWarehouses = async () => {
     try {
-      const res = await axios.get('/api/warehouses');
+      const res = await api.get('/api/warehouses');
       setWarehouses(res.data.data || []);
     } catch (err) { console.error(err); }
     finally { setLoading(false); }
@@ -24,7 +24,7 @@ export default function Warehouses() {
 
   const handleAdd = async () => {
     try {
-      await axios.post('/api/warehouses', form);
+      await api.post('/api/warehouses', form);
       setMessage('Warehouse created');
       setModal(null); setForm({ name: '', location: '' });
       fetchWarehouses();
@@ -33,7 +33,7 @@ export default function Warehouses() {
 
   const handleEdit = async (id) => {
     try {
-      await axios.put(`/api/warehouses/${id}`, form);
+      await api.put(`/api/warehouses/${id}`, form);
       setMessage('Warehouse updated');
       setModal(null); setForm({ name: '', location: '' });
       fetchWarehouses();
@@ -43,7 +43,7 @@ export default function Warehouses() {
   const handleDelete = async (id) => {
     if (!confirm('Delete this warehouse?')) return;
     try {
-      await axios.delete(`/api/warehouses/${id}`);
+      await api.delete(`/api/warehouses/${id}`);
       setMessage('Warehouse deleted');
       fetchWarehouses();
     } catch (err) { setMessage(err.response?.data?.message || 'Cannot delete. Products may exist.'); }
@@ -151,4 +151,5 @@ export default function Warehouses() {
     </div >
   );
 }
+
 

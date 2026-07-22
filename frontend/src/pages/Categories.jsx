@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import { PERMISSIONS } from '../utils/permissions';
 
@@ -14,7 +14,7 @@ export default function Categories() {
 
   const fetchCategories = async () => {
     try {
-      const res = await axios.get('/api/categories');
+      const res = await api.get('/api/categories');
       setCategories(res.data.data || []);
     } catch (err) { console.error(err); }
     finally { setLoading(false); }
@@ -24,7 +24,7 @@ export default function Categories() {
 
   const handleAdd = async () => {
     try {
-      await axios.post('/api/categories', form);
+      await api.post('/api/categories', form);
       setMessage('Category created');
       setModal(null); setForm({ name: '', description: '' });
       fetchCategories();
@@ -33,7 +33,7 @@ export default function Categories() {
 
   const handleEdit = async (id) => {
     try {
-      await axios.put(`/api/categories/${id}`, form);
+      await api.put(`/api/categories/${id}`, form);
       setMessage('Category updated');
       setModal(null); setForm({ name: '', description: '' });
       fetchCategories();
@@ -43,7 +43,7 @@ export default function Categories() {
   const handleDelete = async (id) => {
     if (!confirm('Delete this category?')) return;
     try {
-      await axios.delete(`/api/categories/${id}`);
+      await api.delete(`/api/categories/${id}`);
       setMessage('Category deleted');
       fetchCategories();
     } catch (err) { setMessage(err.response?.data?.message || 'Cannot delete. Products may exist.'); }
@@ -124,4 +124,5 @@ export default function Categories() {
     </div>
   );
 }
+
 

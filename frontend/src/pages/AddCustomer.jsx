@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import api from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import { PERMISSIONS } from '../utils/permissions';
 
@@ -34,7 +34,7 @@ export default function AddCustomer() {
       if (!payload.gstNumber) delete payload.gstNumber;
       if (!payload.email) delete payload.email;
       if (!payload.notes) delete payload.notes;
-      await axios.post('/api/customers', payload);
+      await api.post('/api/customers', payload);
       navigate('/customers');
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to create customer');
@@ -120,4 +120,5 @@ export default function AddCustomer() {
     </div>
   );
 }
+
 

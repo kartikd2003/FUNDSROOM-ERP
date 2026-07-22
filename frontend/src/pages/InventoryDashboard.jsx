@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../services/api';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, PieChart, Pie, Cell, Legend, ResponsiveContainer } from 'recharts';
 import { useAuth } from '../context/AuthContext';
 import { PERMISSIONS } from '../utils/permissions';
@@ -20,11 +20,11 @@ export default function InventoryDashboard() {
     const fetchData = async () => {
       try {
         const [sumRes, catRes, moveRes, actRes, lowRes] = await Promise.all([
-          axios.get('/api/inventory-dashboard/summary'),
-          axios.get('/api/inventory-dashboard/category-stock'),
-          axios.get('/api/inventory-dashboard/stock-movement'),
-          axios.get('/api/inventory-dashboard/activity'),
-          axios.get('/api/inventory-dashboard/low-stock')
+          api.get('/api/inventory-dashboard/summary'),
+          api.get('/api/inventory-dashboard/category-stock'),
+          api.get('/api/inventory-dashboard/stock-movement'),
+          api.get('/api/inventory-dashboard/activity'),
+          api.get('/api/inventory-dashboard/low-stock')
         ]);
         setSummary(sumRes.data.data);
         setCategoryData(catRes.data.data);
@@ -171,4 +171,5 @@ export default function InventoryDashboard() {
     </div>
   );
 }
+
 

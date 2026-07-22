@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import axios from 'axios';
+import api from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import { PERMISSIONS } from '../utils/permissions';
 
@@ -22,9 +22,9 @@ export default function EditProduct() {
     const fetch = async () => {
       try {
         const [catRes, whRes, prodRes] = await Promise.all([
-          axios.get('/api/categories'),
-          axios.get('/api/warehouses'),
-          axios.get(`/api/products/${id}`)
+          api.get('/api/categories'),
+          api.get('/api/warehouses'),
+          api.get(`/api/products/${id}`)
         ]);
         setCategories(catRes.data.data || []);
         setWarehouses(whRes.data.data || []);
@@ -51,7 +51,7 @@ export default function EditProduct() {
     setError('');
     setSubmitting(true);
     try {
-      await axios.put(`/api/products/${id}`, {
+      await api.put(`/api/products/${id}`, {
         ...form,
         categoryId: Number(form.categoryId),
         warehouseId: Number(form.warehouseId),
@@ -128,4 +128,5 @@ export default function EditProduct() {
     </div>
   );
 }
+
 

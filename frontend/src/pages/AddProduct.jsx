@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import api from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import { PERMISSIONS } from '../utils/permissions';
 
@@ -20,8 +20,8 @@ export default function AddProduct() {
     const fetch = async () => {
       try {
         const [catRes, whRes] = await Promise.all([
-          axios.get('/api/categories'),
-          axios.get('/api/warehouses')
+          api.get('/api/categories'),
+          api.get('/api/warehouses')
         ]);
         setCategories(catRes.data.data || []);
         setWarehouses(whRes.data.data || []);
@@ -45,7 +45,7 @@ export default function AddProduct() {
         currentStock: Number(form.currentStock),
         minimumStock: Number(form.minimumStock)
       };
-      await axios.post('/api/products', payload);
+      await api.post('/api/products', payload);
       navigate('/products');
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to create product');
@@ -113,4 +113,5 @@ export default function AddProduct() {
     </div>
   );
 }
+
 

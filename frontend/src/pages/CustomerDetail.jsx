@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import axios from 'axios';
+import api from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import { PERMISSIONS } from '../utils/permissions';
 
@@ -19,7 +19,7 @@ export default function CustomerDetail() {
 
     const fetchCustomer = async () => {
         try {
-            const res = await axios.get('/api/customers/' + id + '/details');
+            const res = await api.get('/api/customers/' + id + '/details');
             setCustomer(res.data.data);
         } catch (err) {
             setMessage('Failed to load customer details');
@@ -35,7 +35,7 @@ export default function CustomerDetail() {
         try {
             const payload = { note: followUpNote };
             if (followUpDate) payload.followUpDate = followUpDate;
-            await axios.post('/api/customers/' + id + '/followup', payload);
+            await api.post('/api/customers/' + id + '/followup', payload);
             setFollowUpNote('');
             setFollowUpDate('');
             setMessage('Follow-up added successfully');
@@ -152,3 +152,4 @@ export default function CustomerDetail() {
         </div>
     );
 }
+

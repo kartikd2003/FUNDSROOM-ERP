@@ -202,3 +202,4 @@ export const hasPermission = (role, permission) => {
   if (!rolePerms) return false;
   return rolePerms.includes(permission);
 };
+

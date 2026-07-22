@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import axios from 'axios';
+import api from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import { PERMISSIONS } from '../utils/permissions';
 
@@ -27,7 +27,7 @@ export default function EditCustomer() {
   useEffect(() => {
     const fetch = async () => {
       try {
-        const res = await axios.get(`/api/customers/${id}`);
+        const res = await api.get(`/api/customers/${id}`);
         const c = res.data.data;
         setForm({
           customerName: c.customerName,
@@ -62,7 +62,7 @@ export default function EditCustomer() {
       if (!payload.gstNumber) delete payload.gstNumber;
       if (!payload.email) delete payload.email;
       if (!payload.notes) delete payload.notes;
-      await axios.put(`/api/customers/${id}`, payload);
+      await api.put(`/api/customers/${id}`, payload);
       navigate('/customers');
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to update customer');
@@ -150,4 +150,5 @@ export default function EditCustomer() {
     </div>
   );
 }
+
 

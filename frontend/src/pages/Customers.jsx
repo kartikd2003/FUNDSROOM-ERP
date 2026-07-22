@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import api from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import { PERMISSIONS } from '../utils/permissions';
 
@@ -26,7 +26,7 @@ export default function Customers() {
       if (search) params.search = search;
       if (statusFilter) params.status = statusFilter;
       if (typeFilter) params.customerType = typeFilter;
-      const res = await axios.get('/api/customers', { params });
+      const res = await api.get('/api/customers', { params });
       const d = res.data;
       setCustomers(d.customers || []);
       setTotal(d.pagination?.total || 0);
@@ -45,7 +45,7 @@ export default function Customers() {
   const handleDelete = async (id) => {
     if (!confirm('Are you sure you want to delete this customer?')) return;
     try {
-      await axios.delete(`/api/customers/${id}`);
+      await api.delete(`/api/customers/${id}`);
       setMessage('Customer deleted successfully');
       fetchCustomers();
     } catch (err) {
@@ -55,7 +55,7 @@ export default function Customers() {
 
   const handleStatusChange = async (id, status) => {
     try {
-      await axios.patch(`/api/customers/${id}/status`, { status });
+      await api.patch(`/api/customers/${id}/status`, { status });
       setMessage(`Status updated to ${status}`);
       fetchCustomers();
     } catch (err) {
@@ -199,3 +199,4 @@ export default function Customers() {
     </div>  
   );
 }
+
