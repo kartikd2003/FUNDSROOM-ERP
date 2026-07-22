@@ -34,6 +34,12 @@ export default function Sidebar() {
             <span>Products</span>
           </NavLink>
         )}
+        {can(PERMISSIONS.SALES_VIEW) && (
+          <NavLink to="/challans" className={({ isActive }) => isActive ? 'active' : ''}>
+            <span className="icon">🧾</span>
+            <span>Sales Challans</span>
+          </NavLink>
+        )}
         {can(PERMISSIONS.CATEGORY_VIEW) && (
           <NavLink to="/categories" className={({ isActive }) => isActive ? 'active' : ''}>
             <span className="icon">🏷️</span>

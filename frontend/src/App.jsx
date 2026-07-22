@@ -15,6 +15,9 @@ import Warehouses from './pages/Warehouses';
 import StockManagement from './pages/StockManagement';
 import Analytics from './pages/Analytics';
 import AuditLogs from './pages/AuditLogs';
+import Challans from './pages/Challans';
+import AddChallan from './pages/AddChallan';
+import ChallanDetail from './pages/ChallanDetail';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { hasPermission } from './utils/permissions';
 
@@ -59,6 +62,9 @@ function AppLayout() {
           <Route path="/stock" element={<StockManagement />} />
           <Route path="/analytics" element={<Analytics />} />
           <Route path="/audit" element={<AuditLogs />} />
+          <Route path="/challans" element={<Challans />} />
+          <Route path="/challans/add" element={<AddChallan />} />
+          <Route path="/challans/:id" element={<ChallanDetail />} />
         </Routes>
       </div>
     </div>
