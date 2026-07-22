@@ -23,6 +23,7 @@ export default function Categories() {
   useEffect(() => { fetchCategories(); }, []);
 
   const handleAdd = async () => {
+    
     try {
       await api.post('/api/categories', form);
       setMessage('Category created');
