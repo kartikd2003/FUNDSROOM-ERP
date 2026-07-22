@@ -15,25 +15,25 @@ class ImportService {
         continue;
       }
 
-      // Validate category exists
-      const category = await prisma.category.findUnique({ where: { id: Number(product.categoryId) } });
+      // Look up category by name
+      const category = await prisma.category.findUnique({ where: { name: product.category } });
       if (!category) {
-        failed.push({ sku: product.sku, reason: 'Category not found' });
+        failed.push({ sku: product.sku, reason: `Category "${product.category}" not found` });
         continue;
       }
 
-      // Validate warehouse exists
-      const warehouse = await prisma.warehouse.findUnique({ where: { id: Number(product.warehouseId) } });
+      // Look up warehouse by name
+      const warehouse = await prisma.warehouse.findUnique({ where: { name: product.warehouse } });
       if (!warehouse) {
-        failed.push({ sku: product.sku, reason: 'Warehouse not found' });
+        failed.push({ sku: product.sku, reason: `Warehouse "${product.warehouse}" not found` });
         continue;
       }
 
       success.push({
         productName: product.productName,
         sku: product.sku,
-        categoryId: Number(product.categoryId),
-        warehouseId: Number(product.warehouseId),
+        categoryId: category.id,
+        warehouseId: warehouse.id,
         unitPrice: Number(product.unitPrice),
         currentStock: Number(product.currentStock) || 0,
         minimumStock: Number(product.minimumStock) || 0
@@ -53,4 +53,3 @@ class ImportService {
 }
 
 export default new ImportService();
-
