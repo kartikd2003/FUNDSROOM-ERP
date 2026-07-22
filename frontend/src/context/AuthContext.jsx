@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import axios from 'axios';
+import api.from 'api.;
 import api from '../services/api';
 import { hasPermission } from '../utils/permissions';
 
@@ -18,7 +18,7 @@ export function AuthProvider({ children }) {
         const parsedUser = JSON.parse(userData);
         setUser(parsedUser);
         api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-        axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+        api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
       } catch {
         localStorage.removeItem('token');
         localStorage.removeItem('user');
@@ -40,7 +40,7 @@ export function AuthProvider({ children }) {
     localStorage.setItem('user', JSON.stringify(userData));
 
     api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+    api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
 
     setUser(userData);
 
@@ -52,7 +52,7 @@ export function AuthProvider({ children }) {
     localStorage.removeItem('user');
 
     delete api.defaults.headers.common['Authorization'];
-    delete axios.defaults.headers.common['Authorization'];
+    delete api.defaults.headers.common['Authorization'];
 
     setUser(null);
   };
