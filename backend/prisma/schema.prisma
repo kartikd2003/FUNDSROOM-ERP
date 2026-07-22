@@ -101,14 +101,14 @@ model Category {
 }
 
 model Warehouse {
-  id             Int              @id @default(autoincrement())
-  name           String           @unique
+  id             Int             @id @default(autoincrement())
+  name           String          @unique
   location       String?
   products       Product[]
   stockMovements StockMovement[]
-  createdAt      DateTime         @default(now())
-  updatedAt      DateTime         @updatedAt
-  challans       Challan[]
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  challanItems   ChallanItem[]
 }
 
 model Product {
@@ -129,7 +129,7 @@ model Product {
   deletedAt       DateTime?
   createdAt       DateTime         @default(now())
   updatedAt       DateTime         @updatedAt
-  challans        Challan[]
+  challanItems    ChallanItem[]
 
   @@index([productName])
   @@index([sku])
@@ -149,11 +149,11 @@ model StockMovement {
 }
 
 model InventoryAlert {
-  id        Int     @id @default(autoincrement())
+  id        Int      @id @default(autoincrement())
   productId Int
   message   String
-  isRead    Boolean @default(false)
-  product   Product @relation(fields: [productId], references: [id])
+  isRead    Boolean  @default(false)
+  product   Product  @relation(fields: [productId], references: [id])
   createdAt DateTime @default(now())
 }
 
@@ -197,4 +197,3 @@ model ChallanItem {
   warehouseId Int
   warehouse   Warehouse @relation(fields: [warehouseId], references: [id])
 }
-
