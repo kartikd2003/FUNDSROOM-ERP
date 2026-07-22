@@ -4,10 +4,11 @@ export const validate = (schema: any) => (req: Request, res: Response, next: Nex
   const result = schema.safeParse(req.body);
 
   if (!result.success) {
+    const issues = result.error.issues || result.error.errors || [];
     return res.status(400).json({
       success: false,
       message: 'Validation Error',
-      errors: result.error.errors.map((error: any) => error.message)
+      errors: issues.map((error: any) => error.message)
     });
   }
 

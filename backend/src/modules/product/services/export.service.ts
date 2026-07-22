@@ -21,9 +21,11 @@ class ExportService {
       minimumStock: p.minimumStock
     }));
 
-    const parser = new Parser();
-    return parser.parse(data);
+    const fields = ['productName', 'sku', 'category', 'warehouse', 'unitPrice', 'currentStock', 'minimumStock'];
+    const parser = new Parser({ fields });
+    return parser.parse(data); // works even when data is []
   }
+
 }
 
 export default new ExportService();
