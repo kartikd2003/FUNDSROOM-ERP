@@ -9,6 +9,7 @@ import warehouseRoutes from '../modules/product/routes/warehouse.routes';
 import stockRoutes from '../modules/product/routes/stock.routes';
 import analyticsRoutes from '../modules/product/routes/analytics.routes';
 import auditRoutes from '../modules/product/routes/audit.routes';
+import challanRoutes from '../modules/challan/routes/challan.routes';
 
 const router = Router();
 
@@ -22,5 +23,6 @@ router.use('/warehouses', warehouseRoutes);
 router.use('/stock', stockRoutes);
 router.use('/analytics', analyticsRoutes);
 router.use('/audit', auditRoutes);
+router.use('/challans', challanRoutes);
 
 export default router;
