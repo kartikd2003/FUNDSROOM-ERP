@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
+import { useAuth } from '../context/AuthContext';
+import { PERMISSIONS } from '../utils/permissions';
 
 export default function EditProduct() {
-  const { id } = useParams();
+
+  const { can } = useAuth();  const { id } = useParams();
   const navigate = useNavigate();
   const [categories, setCategories] = useState([]);
   const [warehouses, setWarehouses] = useState([]);

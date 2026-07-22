@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { useAuth } from '../context/AuthContext';
+import { PERMISSIONS } from '../utils/permissions';
 
 export default function AddCustomer() {
-  const navigate = useNavigate();
+
+  const { can } = useAuth();  const navigate = useNavigate();
   const [form, setForm] = useState({
     customerName: '',
     mobile: '',

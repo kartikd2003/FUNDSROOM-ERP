@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, PieChart, Pie, Cell, Legend, ResponsiveContainer } from 'recharts';
+import { useAuth } from '../context/AuthContext';
+import { PERMISSIONS } from '../utils/permissions';
 
 const COLORS = ['#3b82f6', '#22c55e', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899'];
 
 export default function InventoryDashboard() {
+
+  const { can } = useAuth();
   const [summary, setSummary] = useState(null);
   const [categoryData, setCategoryData] = useState([]);
   const [stockMovement, setStockMovement] = useState([]);
@@ -159,7 +163,7 @@ export default function InventoryDashboard() {
       <div className="chart-card">
         <h3>Quick Actions</h3>
         <div className="quick-actions">
-          <a href="/products/add" className="btn btn-primary">+ Add Product</a>
+          {can(PERMISSIONS.PRODUCT_CREATE) && <a href="/products/add" className="btn btn-primary">+ Add Product</a>}
           <a href="/products" className="btn btn-success">View Products</a>
           <a href="/analytics" className="btn btn-warning">View Analytics</a>
         </div>

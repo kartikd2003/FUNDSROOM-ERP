@@ -31,6 +31,10 @@ export const loginUser = async (data: { email: string; password: string }) => {
     throw new AppError('Invalid credentials', 401);
   }
 
+  if (!user.isActive) {
+    throw new AppError('Account is deactivated. Contact administrator.', 403);
+  }
+
   const isValid = await bcrypt.compare(data.password, user.password);
 
   if (!isValid) {
@@ -44,7 +48,8 @@ export const loginUser = async (data: { email: string; password: string }) => {
     user: {
       id: user.id,
       name: user.fullName,
-      role: user.role
+      role: user.role,
+      isActive: user.isActive
     }
   };
 };

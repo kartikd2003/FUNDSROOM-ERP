@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { useAuth } from '../context/AuthContext';
+import { PERMISSIONS } from '../utils/permissions';
 
 export default function Analytics() {
-  const [monthlyMovement, setMonthlyMovement] = useState([]);
+
+  const { can } = useAuth();  const [monthlyMovement, setMonthlyMovement] = useState([]);
   const [topProducts, setTopProducts] = useState([]);
   const [categoryStock, setCategoryStock] = useState([]);
   const [loading, setLoading] = useState(true);

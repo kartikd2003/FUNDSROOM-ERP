@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useAuth } from '../context/AuthContext';
+import { PERMISSIONS } from '../utils/permissions';
 
 export default function Categories() {
-  const [categories, setCategories] = useState([]);
+
+  const { can } = useAuth();  const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [modal, setModal] = useState(null);
   const [form, setForm] = useState({ name: '', description: '' });
@@ -55,9 +58,11 @@ export default function Categories() {
     <div>
       <div className="page-header">
         <h1>🏷️ Categories</h1>
-        <button className="btn btn-primary" onClick={() => { setForm({ name: '', description: '' }); setModal({ type: 'add' }); }}>
-          + Add Category
-        </button>
+        {can(PERMISSIONS.CATEGORY_CREATE) && (
+          <button className="btn btn-primary" onClick={() => { setForm({ name: '', description: '' }); setModal({ type: 'add' }); }}>
+            + Add Category
+          </button>
+        )}
       </div>
 
       {message && <div className={`alert ${message.includes('Error') || message.includes('Cannot') ? 'alert-error' : 'alert-success'}`}>{message}</div>}
@@ -85,8 +90,8 @@ export default function Categories() {
                   <td>{c.description || '-'}</td>
                   <td><span className="badge badge-info">{c._count?.products || 0}</span></td>
                   <td>
-                    <button className="btn btn-sm btn-primary" onClick={() => openEdit(c)}>Edit</button>
-                    <button className="btn btn-sm btn-danger" style={{ marginLeft: 4 }} onClick={() => handleDelete(c.id)}>Delete</button>
+                    {can(PERMISSIONS.CATEGORY_UPDATE) && <button className="btn btn-sm btn-primary" onClick={() => openEdit(c)}>Edit</button>}
+                    {can(PERMISSIONS.CATEGORY_DELETE) && <button className="btn btn-sm btn-danger" style={{ marginLeft: 4 }} onClick={() => handleDelete(c.id)}>Delete</button>}
                   </td>
                 </tr>
               ))}

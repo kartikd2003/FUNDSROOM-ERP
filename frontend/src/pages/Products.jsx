@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import { useAuth } from '../context/AuthContext';
+import { PERMISSIONS } from '../utils/permissions';
 
 export default function Products() {
+  const { can } = useAuth();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
@@ -143,12 +146,18 @@ export default function Products() {
       <div className="page-header">
         <h1>📦 Products</h1>
         <div className="header-actions">
-          <Link to="/products/add" className="btn btn-primary">+ Add Product</Link>
-          <button className="btn btn-outline" onClick={handleExport}>Export CSV</button>
-          <label className="btn btn-outline" style={{ cursor: 'pointer' }}>
-            Import CSV
-            <input type="file" accept=".csv" style={{ display: 'none' }} onChange={handleImport} />
-          </label>
+          {can(PERMISSIONS.PRODUCT_CREATE) && (
+            <Link to="/products/add" className="btn btn-primary">+ Add Product</Link>
+          )}
+          {can(PERMISSIONS.PRODUCT_EXPORT) && (
+            <button className="btn btn-outline" onClick={handleExport}>Export CSV</button>
+          )}
+          {can(PERMISSIONS.PRODUCT_IMPORT) && (
+            <label className="btn btn-outline" style={{ cursor: 'pointer' }}>
+              Import CSV
+              <input type="file" accept=".csv" style={{ display: 'none' }} onChange={handleImport} />
+            </label>
+          )}
         </div>
       </div>
 
@@ -239,11 +248,21 @@ export default function Products() {
                 <td>{p.minimumStock}</td>
                 <td>
                   <div style={{ display: 'flex', gap: '4px', flexWrap: 'wrap' }}>
-                    <Link to={`/products/edit/${p.id}`} className="btn btn-sm btn-primary">Edit</Link>
-                    <button className="btn btn-sm btn-success" onClick={() => setStockModal({ id: p.id, type: 'in' })}>IN</button>
-                    <button className="btn btn-sm btn-warning" onClick={() => setStockModal({ id: p.id, type: 'out' })}>OUT</button>
-                    <button className="btn btn-sm btn-outline" onClick={() => setImageModal(p.id)}>📷</button>
-                    <button className="btn btn-sm btn-danger" onClick={() => handleDelete(p.id)}>Del</button>
+                    {can(PERMISSIONS.PRODUCT_UPDATE) && (
+                      <Link to={`/products/edit/${p.id}`} className="btn btn-sm btn-primary">Edit</Link>
+                    )}
+                    {can(PERMISSIONS.INVENTORY_STOCK_IN) && (
+                      <button className="btn btn-sm btn-success" onClick={() => setStockModal({ id: p.id, type: 'in' })}>IN</button>
+                    )}
+                    {can(PERMISSIONS.INVENTORY_STOCK_OUT) && (
+                      <button className="btn btn-sm btn-warning" onClick={() => setStockModal({ id: p.id, type: 'out' })}>OUT</button>
+                    )}
+                    {can(PERMISSIONS.PRODUCT_UPLOAD_IMAGE) && (
+                      <button className="btn btn-sm btn-outline" onClick={() => setImageModal(p.id)}>📷</button>
+                    )}
+                    {can(PERMISSIONS.PRODUCT_DELETE) && (
+                      <button className="btn btn-sm btn-danger" onClick={() => handleDelete(p.id)}>Del</button>
+                    )}
                   </div>
                 </td>
               </tr>
@@ -304,4 +323,3 @@ export default function Products() {
     </div>
   );
 }
-

@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useAuth } from '../context/AuthContext';
+import { PERMISSIONS } from '../utils/permissions';
 
 export default function StockManagement() {
-  const [movements, setMovements] = useState([]);
+
+  const { can } = useAuth();  const [movements, setMovements] = useState([]);
   const [productHistory, setProductHistory] = useState([]);
   const [loading, setLoading] = useState(true);
   const [view, setView] = useState('all');

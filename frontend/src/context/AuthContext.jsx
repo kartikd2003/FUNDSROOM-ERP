@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import axios from 'axios';
 import api from '../services/api';
+import { hasPermission } from '../utils/permissions';
 
 const AuthContext = createContext();
 
@@ -14,7 +15,8 @@ export function AuthProvider({ children }) {
 
     if (token && userData) {
       try {
-        setUser(JSON.parse(userData));
+        const parsedUser = JSON.parse(userData);
+        setUser(parsedUser);
         api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
         axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
       } catch {
@@ -32,17 +34,17 @@ export function AuthProvider({ children }) {
       password,
     });
 
-    const { token, user } = res.data.data;
+    const { token, user: userData } = res.data.data;
 
     localStorage.setItem('token', token);
-    localStorage.setItem('user', JSON.stringify(user));
+    localStorage.setItem('user', JSON.stringify(userData));
 
     api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
     axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
 
-    setUser(user);
+    setUser(userData);
 
-    return user;
+    return userData;
   };
 
   const logout = () => {
@@ -55,6 +57,26 @@ export function AuthProvider({ children }) {
     setUser(null);
   };
 
+  /**
+   * Check if the current user has a specific permission.
+   * @param {string} permission - Permission string (e.g. 'CUSTOMER.CREATE')
+   * @returns {boolean}
+   */
+  const can = (permission) => {
+    if (!user || !permission) return false;
+    return hasPermission(user.role, permission);
+  };
+
+  /**
+   * Check if the current user has a specific role.
+   * @param {string} role - Role to check (e.g. 'ADMIN')
+   * @returns {boolean}
+   */
+  const isRole = (role) => {
+    if (!user || !role) return false;
+    return user.role === role;
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -62,6 +84,8 @@ export function AuthProvider({ children }) {
         login,
         logout,
         loading,
+        can,
+        isRole,
       }}
     >
       {children}

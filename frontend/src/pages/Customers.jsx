@@ -1,8 +1,12 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { useAuth } from '../context/AuthContext';
+import { PERMISSIONS } from '../utils/permissions';
 
 export default function Customers() {
+
+  const { can } = useAuth();
   const navigate = useNavigate();
   const [customers, setCustomers] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -84,7 +88,7 @@ export default function Customers() {
       <div className="page-header">
         <h1>👥 Customers</h1>
         <div className="header-actions">
-          <Link to="/customers/add" className="btn btn-primary">+ Add Customer</Link>
+          {can(PERMISSIONS.CUSTOMER_CREATE) && <Link to="/customers/add" className="btn btn-primary">+ Add Customer</Link>}
         </div>
       </div>
       {message && (
@@ -165,7 +169,7 @@ export default function Customers() {
                 <td>
                   <div style={{ display: 'flex', gap: '4px', flexWrap: 'wrap' }}>
                     <button className="btn btn-sm btn-primary" onClick={() => navigate(`/customers/${c.id}`)}>View</button>
-                    <button className="btn btn-sm btn-success" onClick={() => navigate(`/customers/edit/${c.id}`)}>Edit</button>
+                    {can(PERMISSIONS.CUSTOMER_UPDATE) && <button className="btn btn-sm btn-success" onClick={() => navigate(`/customers/edit/${c.id}`)}>Edit</button>}
                     <select
                       value={c.status}
                       onChange={(e) => handleStatusChange(c.id, e.target.value)}
@@ -175,7 +179,7 @@ export default function Customers() {
                       <option value="ACTIVE">Active</option>
                       <option value="INACTIVE">Inactive</option>
                     </select>
-                    <button className="btn btn-sm btn-danger" onClick={() => handleDelete(c.id)}>Del</button>
+                    {can(PERMISSIONS.CUSTOMER_DELETE) && <button className="btn btn-sm btn-danger" onClick={() => handleDelete(c.id)}>Del</button>}
                   </div>
                 </td>
               </tr>
